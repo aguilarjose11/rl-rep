@@ -4,10 +4,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-from utils import util
+from ..utils import util
 
-from critic import DoubleQCritic
-from actor import DiagGaussianActor
+from .critic import DoubleQCritic
+from .actor import DiagGaussianActor
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

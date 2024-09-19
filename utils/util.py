@@ -1,5 +1,5 @@
 import time
-import gym 
+import gymnasium as gym
 import numpy as np 
 import torch
 
@@ -37,17 +37,23 @@ class Timer:
 		return sps
 
 
-def eval_policy(policy, eval_env, eval_episodes=10):
+def eval_policy(policy, eval_env, eval_episodes=10, max_steps=2_000):
 	"""
 	Eval a policy
 	"""
 	avg_reward = 0.
 	for _ in range(eval_episodes):
-		state, done = eval_env.reset(), False
+		(state, info), done = eval_env.reset(), False
+		step = 0
 		while not done:
 			action = policy.select_action(np.array(state))
-			state, reward, done, _ = eval_env.step(action)
+			state, reward, done, _, info = eval_env.step(action)
 			avg_reward += reward
+			step += 1
+			if step > max_steps:
+				# Too many steps; terminate episode and start anew
+				done = True
+				# break # Uneccesary break?
 
 	avg_reward /= eval_episodes
 
